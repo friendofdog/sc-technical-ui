@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import ReactDOM from "react-dom/client";
 
 import "./styles.css";
@@ -16,32 +16,56 @@ type AppProps = {
   items: Item[];
 };
 
-const ListItem = ({ item }: {
+const ListItem = React.memo(({ item, toggleSelect }: {
   item: Item;
+  toggleSelect: (name: string) => void;
 }) => {
   return (
     <li
       key={item.name}
       className="List-item"
       style={{ backgroundColor: item.color }}
+      onClick={() => toggleSelect(item.name)}
     >
       {item.name}
     </li>
   );
-};
+});
 
 function App({ items }: AppProps) {
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+
+  const toggleSelect = useCallback((itemName: string) => {
+    setSelectedItems((prev) => {
+      const curr = new Set(prev); // prevent mutation
+
+      if (curr.has(itemName)) {
+        curr.delete(itemName);
+      } else {
+        curr.add(itemName);
+      }
+
+      return curr;
+    });
+  }, []);
+
   return (
-    <ul className="List">
-      {items.map((item) => (
-        <ListItem
-          key={item.name}
-          item={item}
-        />
-      ))}
-    </ul>
+    <>
+      <div className="Selected-items">
+        Selected: {Array.from(selectedItems).join(", ")}
+      </div>
+      <ul className="List">
+        {items.map((item) => (
+          <ListItem
+            key={item.name}
+            item={item}
+            toggleSelect={toggleSelect}
+          />
+        ))}
+      </ul>
+    </>
   );
-};
+}
 
 // ---------------------------------------
 // Do NOT change anything below this line.
