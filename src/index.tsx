@@ -16,15 +16,15 @@ type AppProps = {
   items: Item[];
 };
 
-const ListItem = React.memo(({ item, toggleSelect }: {
+const ListItem = React.memo(({ item, isSelected, toggleSelect }: {
   item: Item;
+  isSelected: boolean;
   toggleSelect: (name: string) => void;
 }) => {
   return (
     <li
-      key={item.name}
-      className="List-item"
-      style={{ backgroundColor: item.color }}
+      className={`List-item ${isSelected ? "selected" : ''}`}
+      style={{ backgroundColor: isSelected ? item.color: 'darksalmon' }}
       onClick={() => toggleSelect(item.name)}
     >
       {item.name}
@@ -59,6 +59,7 @@ function App({ items }: AppProps) {
           <ListItem
             key={item.name}
             item={item}
+            isSelected={selectedItems.has(item.name)}
             toggleSelect={toggleSelect}
           />
         ))}
