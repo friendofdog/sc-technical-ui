@@ -16,21 +16,32 @@ type AppProps = {
   items: Item[];
 };
 
+const ListItem = ({ item }: {
+  item: Item;
+}) => {
+  return (
+    <li
+      key={item.name}
+      className="List-item"
+      style={{ backgroundColor: item.color }}
+    >
+      {item.name}
+    </li>
+  );
+};
+
 function App({ items }: AppProps) {
   return (
     <ul className="List">
       {items.map((item) => (
-        <li
+        <ListItem
           key={item.name}
-          className="List-item"
-          style={{ backgroundColor: item.color }}
-        >
-          {item.name}
-        </li>
+          item={item}
+        />
       ))}
     </ul>
   );
-}
+};
 
 // ---------------------------------------
 // Do NOT change anything below this line.
